@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="ltr"{% endif %}>
+{% load pages_tags mezzanine_tags i18n staticfiles %}
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+<link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+{% ifinstalled mezzanine.blog %}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+{% endifinstalled %}
+
+{% compress css %}
+
+<!-- <link rel="stylesheet" href="{% static "css/bootstrap.css" %}"> -->
+<link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+<link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+
+<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static "css/bootstrap.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "style.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/swiper.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/dark.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/font-icons.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/animate.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/magnific-popup.css" %}" type="text/css" />
+
+<link rel="stylesheet" href="{% static "css/responsive.css" %}" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/bootstrap-rtl.css" %}">
+{% endif %}
+{% ifinstalled cartridge.shop %}
+<link rel="stylesheet" href="{% static "css/cartridge.css" %}">
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
+{% endif %}
+{% endifinstalled %}
+{% block extra_css %}{% endblock %}
+{% endcompress %}
+
+{% compress js %}
+<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+<script src="{% static "js/bootstrap.js" %}"></script>
+<script src="{% static "js/bootstrap-extras.js" %}"></script>
+{% block extra_js %}{% endblock %}
+{% endcompress %}
+
+<!--[if lt IE 9]>
+<script src="{% static "js/html5shiv.js" %}"></script>
+<script src="{% static "js/respond.min.js" %}"></script>
+<![endif]-->
+
+{% block extra_head %}{% endblock %}
+</head>
+
+<body class="stretched" id="{% block body_id %}body{% endblock %}">
+
+    <!-- Document Wrapper
+        ============================================= -->
+
+
+    <div id="wrapper" class="clearfix">
+
+        <!-- Header
+        ============================================= -->
+        {% block header_wrapper %}
+
+        <header id="header" class="transparent-header semi-transparent full-header">
+
+                    <div id="header-wrap">
+
+                        <div class="container clearfix">
+
+                            <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+                            <!-- Logo
+                            ============================================= -->
+                            <div id="logo">
+                                <a href="{% url 'home' %}" class="standard-logo" data-dark-logo="{% static "images/logo-dark.png" %}"><img src="{% static "images/logo.png" %}" alt="Canvas Logo"></a>
+                                <a href="{% url 'home' %}" class="retina-logo" data-dark-logo="{% static "images/logo-dark@2x.png" %}"><img src="{% static "images/logo@2x.png" %}" alt="Canvas Logo"></a>
+                            </div><!-- #logo end -->
+
+                            <!-- Primary Navigation
+                            ============================================= -->
+                            <nav id="primary-menu">
+
+                                {% block navbar_dropdown_menu %}{% page_menu "pages/menus/dropdown.html" %}{% endblock%}
+
+                                {% comment %}<!-- Top Cart
+                                ============================================= -->
+                                <div id="top-cart">
+                                    <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>5</span></a>
+                                    <div class="top-cart-content">
+                                        <div class="top-cart-title">
+                                            <h4>Shopping Cart</h4>
+                                        </div>
+                                        <div class="top-cart-items">
+                                            <div class="top-cart-item clearfix">
+                                                <div class="top-cart-item-image">
+                                                    <a href="#"><img src="images/shop/small/1.jpg" alt="Blue Round-Neck Tshirt" /></a>
+                                                </div>
+                                                <div class="top-cart-item-desc">
+                                                    <a href="#">Blue Round-Neck Tshirt</a>
+                                                    <span class="top-cart-item-price">$19.99</span>
+                                                    <span class="top-cart-item-quantity">x 2</span>
+                                                </div>
+                                            </div>
+                                            <div class="top-cart-item clearfix">
+                                                <div class="top-cart-item-image">
+                                                    <a href="#"><img src="images/shop/small/6.jpg" alt="Light Blue Denim Dress" /></a>
+                                                </div>
+                                                <div class="top-cart-item-desc">
+                                                    <a href="#">Light Blue Denim Dress</a>
+                                                    <span class="top-cart-item-price">$24.99</span>
+                                                    <span class="top-cart-item-quantity">x 3</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="top-cart-action clearfix">
+                                            <span class="fleft top-checkout-price">$114.95</span>
+                                            <button class="button button-3d button-small nomargin fright">View Cart</button>
+                                        </div>
+                                    </div>
+                                </div><!-- #top-cart end -->{% endcomment %}
+
+                                <!-- Top Search
+                                ============================================= -->
+                                <div id="top-search">
+                                    <a href="#" id="top-search-trigger"><i class="icon-search3"></i><i class="icon-line-cross"></i></a>
+                                    <form action="{% url 'search' %}" method="get">
+                                        <input type="text" name="q" class="form-control" value="" placeholder="Type &amp; Hit Enter..">
+                                    </form>
+                                </div><!-- #top-search end -->
+
+                            </nav><!-- #primary-menu end -->
+
+                        </div>
+
+                    </div>
+
+                </header>
+
+        {% endblock %}
+
+		{% block all_content %}
+            <!-- Page Title
+            ============================================= -->
+            <section id="page-title">
+
+                <div class="container clearfix">
+                    <h1>{% block title %}{% endblock %}</h1>
+                    <span style="max-width:80%">{% block page_description %}{% endblock %}</span>
+                    <ol class="breadcrumb">
+                        {% spaceless %}
+                            {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+                        {% endspaceless %}
+{#                        <li class="active">{{ page.title }}</li>#}
+                    </ol>
+                </div>
+
+            </section><!-- #page-title end -->
+
+            <section id="content">
+
+			<div class="content-wrap">
+
+				<div class="container clearfix">
+                    <div class="postcontent nobottommargin clearfix">
+					<!-- Post Content
+					============================================= -->
+                        {% block main %}{% endblock %}
+					<!-- .postcontent end -->
+                    </div>
+					<!-- Sidebar
+					============================================= -->
+                    {% block right_sidebar_wrapper %}
+					<div class="sidebar nobottommargin col_last clearfix">
+                        <div class="sidebar-widgets-wrap">
+						{% block right_sidebar  %}
+                            {% include 'blog/includes/filter_panel_custom.html' %}
+                        {% endblock %}
+                        </div>
+					</div><!-- .sidebar end -->
+                    {% endblock %}
+
+				</div>
+
+			</div>
+
+		</section>
+		{% endblock %}
+
+		<!-- Footer
+		============================================= -->
+		<footer id="footer" class="dark">
+
+			{% page_menu 'pages/menus/footer.html' %}
+
+		</footer><!-- #footer end -->
+
+	</div><!-- #wrapper end -->
+
+	<!-- Go To Top
+	============================================= -->
+	<div id="gotoTop" class="icon-angle-up"></div>
+
+
+
+
+{% block footer_js %}
+{% include "includes/footer_scripts.html" %}
+
+<!-- External JavaScripts
+============================================= -->
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "js/plugins.js" %}"></script>
+
+<!-- Footer Scripts
+============================================= -->
+<script type="text/javascript" src="{% static "js/functions.js" %}"></script>
+{% endblock %}
+
+</body>
+</html>

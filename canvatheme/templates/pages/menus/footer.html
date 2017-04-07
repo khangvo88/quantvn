@@ -1,0 +1,87 @@
+{% load i18n pages_tags %}
+{% load static %}
+
+{% spaceless %}
+{% if page_branch_in_menu %}
+
+<!-- Copyrights
+			============================================= -->
+    <div id="copyrights">
+
+        <div class="container clearfix">
+
+            <div class="col_half">
+                <img src="{% static 'images/footer-logo.png' %}" alt="" class="footer-logo">
+                {% if settings.IS_SHOW_COPYRIGHT %}
+                    {{ settings.IS_SHOW_COPYRIGHT |safe}}
+                {% endif %}
+            </div>
+
+
+            <div class="col_half col_last tright">
+                <div class="copyrights-menu copyright-links fright clearfix">
+
+                {% for page in page_branch %}
+                    {% if not has_home and page.is_primary and forloop.first %}
+                        {% if not on_home %}
+                            <a href="{% url "home" %}">{% trans "Home" %}</a>
+                        {% else %}
+                            {% trans "Home" %}
+                        {% endif %}
+                    {% elif page.is_primary and page.in_menu  %}
+                        {% if not forloop.first %} / {% endif %}<a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                </div>
+                <div class="fright clearfix">
+                    {% if settings.SOCIAL_LINK_FACEBOOK %}
+                    <a href="{{ settings.SOCIAL_LINK_FACEBOOK }}" class="social-icon si-small si-borderless nobottommargin si-facebook">
+                        <i class="icon-facebook"></i>
+                        <i class="icon-facebook"></i>
+                    </a>
+                    {% endif %}
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-twitter">
+                        <i class="icon-twitter"></i>
+                        <i class="icon-twitter"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-gplus">
+                        <i class="icon-gplus"></i>
+                        <i class="icon-gplus"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-pinterest">
+                        <i class="icon-pinterest"></i>
+                        <i class="icon-pinterest"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-vimeo">
+                        <i class="icon-vimeo"></i>
+                        <i class="icon-vimeo"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-github">
+                        <i class="icon-github"></i>
+                        <i class="icon-github"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-yahoo">
+                        <i class="icon-yahoo"></i>
+                        <i class="icon-yahoo"></i>
+                    </a>
+
+                    <a href="#" class="social-icon si-small si-borderless nobottommargin si-linkedin">
+                        <i class="icon-linkedin"></i>
+                        <i class="icon-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- #copyrights end -->
+
+{% endif %}
+{% endspaceless %}

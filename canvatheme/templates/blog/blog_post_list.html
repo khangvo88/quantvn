@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load i18n mezzanine_tags blog_tags keyword_tags disqus_tags %}
+
+{% block meta_title %}{% if page %}{{ page.meta_title }}{% else %}{% trans "Blog" %}{% endif %}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+{% keywords_for page as keywords %}
+{% for keyword in keywords %}
+    {% if not forloop.first %}, {% endif %}
+    {{ keyword }}
+{% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+{{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+{% if page %}
+{% editable page.title %}{{ page.title }}{% endeditable %}
+{% else %}
+{% trans "Blog" %}
+{% endif %}
+{% endblock %}
+
+{% block page_description%}
+    {% editable page.get_content_model.content %}
+        {{ page.get_content_model.content|richtext_filters|safe }}
+    {% endeditable %}
+{% endblock %}
+
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+{% if tag or category or year or month or author %}
+<li>{% spaceless %}
+{% if tag %}
+    {% trans "Tag:" %} {{ tag }}
+{% else %}{% if category %}
+    {% trans "Category:" %} {{ category }}
+{% else %}{% if year or month %}
+    {% if month %}{{ month }}, {% endif %}{{ year }}
+{% else %}{% if author %}
+    {% trans "Author:" %} {{ author.get_full_name|default:author.username }}
+{% endif %}{% endif %}{% endif %}{% endif %}
+{% endspaceless %}
+</li>
+{% endif %}
+{% endblock %}
+
+{% block main %}
+
+{% if tag or category or year or month or author %}
+    {% block blog_post_list_filterinfo %}
+    <p>
+    {% if tag %}
+        {% trans "Viewing posts tagged" %} {{ tag }}
+    {% else %}{% if category %}
+        {% trans "Viewing posts for the category" %} {{ category }}
+    {% else %}{% if year or month %}
+        {% trans "Viewing posts from" %} {% if month %}{{ month }}, {% endif %}
+        {{ year }}
+    {% else %}{% if author %}
+        {% trans "Viewing posts by" %}
+        {{ author.get_full_name|default:author.username }}
+    {% endif %}{% endif %}{% endif %}{% endif %}
+    {% endblock %}
+    </p>
+{% else %}
+    {% if page %}
+{#    {% block blog_post_list_pagecontent %}#}
+{#    {% if page.get_content_model.content %}#}
+{#        {% editable page.get_content_model.content %}#}
+{#        {{ page.get_content_model.content|richtext_filters|safe }}#}
+{#        {% endeditable %}#}
+{#    {% endif %}#}
+{#    {% endblock %}#}
+    {% endif %}
+{% endif %}
+
+
+<div id="posts" class="post-timeline clearfix">
+
+    <div class="timeline-border"></div>
+    {% for blog_post in blog_posts.object_list %}
+    <div class="entry clearfix">
+        {% editable blog_post.publish_date %}
+        <div class="entry-timeline">
+            {{ blog_post.publish_date|date:"d" }}<span>{{ blog_post.publish_date|date:"M" }}</span>
+            <div class="timeline-divider"></div>
+        </div>
+        {% endeditable %}
+
+
+        <div class="entry-image">
+            {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+            {% block blog_post_list_post_featured_image %}
+            <a data-lightbox="image" href="{{ blog_post.get_absolute_url }}">
+                <img class="image_fade" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 1024 0 %}" alt="Standard image">
+            </a>
+            {% endblock %}
+            {% endif %}
+        </div>
+
+
+        {% block blog_post_list_post_title %}
+        {% editable blog_post.title %}
+        <div class="entry-title">
+            <h2><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h2>
+        </div>
+        {% endeditable %}
+        {% endblock %}
+
+
+        {% block blog_post_list_post_metainfo %}
+
+        <ul class="entry-meta clearfix">
+            {% with blog_post.user as author %}
+            <li><a href="{% url "blog_post_list_author" author %}"><i class="icon-user"></i>{{ author.get_full_name|default:author.username }}</a></li>
+            {% endwith %}
+            <li><i class="icon-folder-open"></i>
+                {% with blog_post.categories.all as categories %}
+                {% for category in categories %}
+                    <a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% endwith %}
+            </li>
+        {% if blog_post.allow_comments %}
+
+            <li><a href="{{ blog_post.get_absolute_url }}#comments">
+            {% blocktrans count comments_count=blog_post.comments_count %}{{ comments_count }} comment{% plural %}{{ comments_count }} comments{% endblocktrans %}
+            </a></li>
+        {% endif %}
+            <li><a href="#"><i class="icon-camera-retro"></i></a></li>
+        </ul>
+
+        {% endblock %}
+        <div class="entry-content">
+            {% block blog_post_list_post_content %}
+            {% editable blog_post.content %}
+            {{ blog_post.description_from_content|safe }}
+            {% endeditable %}
+            {% endblock %}
+            <a href="{{ blog_post.get_absolute_url }}"class="more-link">{% trans "Read More" %}</a>
+        </div>
+    </div>
+
+    {% endfor %}
+
+{% pagination_for blog_posts %}
+</div>
+
+{% if settings.COMMENTS_DISQUS_SHORTNAME %}
+{% include "generic/includes/disqus_counts.html" %}
+{% endif %}
+
+{% endblock %}
+
+
+
+{#{% block right_panel %}#}
+{% block right_sidebar %}
+{% include "blog/includes/filter_panel_custom.html" %}
+{% endblock %}
