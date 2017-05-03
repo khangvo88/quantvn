@@ -40,7 +40,6 @@ class Slide(Orderable):
     is_active = models.BooleanField(verbose_name = _("Active"),default=True)
     #text_color = models.TextField(max_length = 6,default="021430")
 
-
 class IconBlurb(Orderable):
     """An icon box on a Homepage"""
     homepage = models.ForeignKey(HomePage, related_name="blurbs")
