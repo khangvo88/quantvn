@@ -51,26 +51,28 @@ class __Deploy:
 
     def deploy(self):
         self.test()
-        # self.collect_static()
-        # self.checkout_code()
 
+        self.checkout_code()
         # self.install_system_packages()
         self.install_python_packages_requirement()
         # self.migrate_db()
         # self.collect_static()
         # self.map_new_deployment()
 
-        # self.run_task_django()
+        self.run_task_django()
 
     def test(self):
         run('uname -a')
         local("echo a")
 
     def checkout_code(self):
-
         self.deploy_dir = "{}/quantvn{}".format(DEPLOY_WRAPPER_FOLDER,time.strftime("%Y%m%d%H%M"))
         with cd(DEPLOY_WRAPPER_FOLDER):
             run("git clone {} {}".format(CHECKOUT_HOST, self.deploy_dir))
+
+            # MAP PRODUCTION SOFTLINK
+            run("rm %s" % PRODUCTION_MAPPER)
+            run("ln -s {} {}".format(self.deploy_dir, PRODUCTION_MAPPER))
 
 
     def install_system_packages(self):
@@ -80,7 +82,7 @@ class __Deploy:
 
     def install_python_packages_requirement(self):
         with _virtualenv():
-            run("pip install -r {}/requirements.txt".format(self.deploy_dir))
+            run("pip3 install -r {}/requirements.txt".format(self.deploy_dir))
 
     def migrate_db(self):
 
@@ -95,7 +97,7 @@ class __Deploy:
 
     def run_task_django(self):
         with _project():
-            run("python manage.py collectstatic -v 0 --noinput")
+            run("python3 manage.py collectstatic -v 0 --noinput")
             #run("python manage.py migrate --noinput")
 
     def map_new_deployment(self):
